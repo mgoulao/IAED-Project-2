@@ -2,11 +2,11 @@
 
 typedef struct node *ListNode;
 
-typedef struct
+typedef struct task
 {
     unsigned long id, duration, *ids;
     char description[TASK_DESC_SIZE];
-} Task;
+} *Task;
 
 struct node
 {

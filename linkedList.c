@@ -38,7 +38,7 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 	return listPointers;
 }
 
-void TLdelete(TaskList head, unsigned long id)
+void TLdeleteAndFree(TaskList head, unsigned long id)
 {
 	TaskList current, previous;
 	int exist = 0;
@@ -65,6 +65,23 @@ void TLdelete(TaskList head, unsigned long id)
 	if (!exist)
 	{
 		printf("%s\n", "no such task");
+	}
+}
+
+void TLdelete(TaskList head)
+{
+	TaskList current, previous;
+	
+	if (TLlength(head) > 0)
+	{
+		for (current = head->next, previous = head; current->next; current = current->next,
+			previous = current)
+		{
+
+			previous->next = current->next;
+
+			break;
+		}
 	}
 }
 

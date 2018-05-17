@@ -24,6 +24,7 @@ int taskHasDependencies(Task task);
 
 void TLprint(TaskList head);
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task);
-void TLdelete(TaskList head, unsigned long id);
+void TLdelete(TaskList head);
+void TLdeleteAndFree(TaskList head, unsigned long id);
 TaskList TLsearch(TaskList head, unsigned long id);
 int TLlength(TaskList head);

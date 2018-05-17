@@ -39,6 +39,7 @@ void add()
 					{
 						printf("no such task\n");
 						canInsert = 0;
+						TLdelete(dependeciesHead);
 						break;
 					} else {
 						TLinsert(dependeciesHead, dependeciesTail, HTsearch(longFromCommand)->task);
@@ -71,7 +72,7 @@ void removeTaskFromProject()
 {
 	unsigned long id;
 	scanf("%lu", &id);
-	TLdelete(globalTaskList.head, id);
+	TLdeleteAndFree(globalTaskList.head, id);
 	HTdelete(id);
 }
 
@@ -80,7 +81,7 @@ void readCommands()
 	char command[COMMAND_MAX_SIZE];
 	while (scanf("%9s", command) == 1 && strcmp(command, "exit"))
 	{
-		printf("-%s\n", command);
+		/*printf("-%s\n", command);*/
 		if (!strcmp(command, "add"))
 		{
 			add();
@@ -113,7 +114,7 @@ int main(int argc, char const *argv[])
 	globalTaskList.tail = NULL;
 	HTinit(m);
 	readCommands(globalTaskList.head, globalTaskList.tail);
-	TLprint(globalTaskList.head);
-	HTshow();
+	/*TLprint(globalTaskList.head);
+	HTshow();*/
 	return 0;
 }
