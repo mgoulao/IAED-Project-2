@@ -3,31 +3,39 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-static TaskList *heads, *tails;
+static GlobalTaskList *hashTableTaskLists;
 
 static int M;
 
 void HTinit(int m) {
 	int i;
 	M = m;
-	heads = (TaskList*)malloc(M * sizeof(TaskList));
-	tails = (TaskList*)malloc(M * sizeof(TaskList));
+	hashTableTaskLists = (GlobalTaskList*)malloc(M * sizeof(GlobalTaskList));
 	for (i = 0; i < M; i++) {
-		heads[i] = NULL;
-		tails[i] = NULL;
+		hashTableTaskLists[i].head = NULL;
+		hashTableTaskLists[i].tail = NULL;
 	}
 }
 
 TaskList HTsearch(unsigned long int id) {
 	int i = hash(id, M);
-	return TLsearch(heads[i], id);
+	return TLsearch(hashTableTaskLists[i].head, id);
 }
 
 void HTinsert(Task task) {
 	int i = hash(key(task), M);
-	TLinsert(heads[i], tails[i], task);
+	TLprint(hashTableTaskLists[i].head);
+	hashTableTaskLists[i] = TLinsert(hashTableTaskLists[i].head, hashTableTaskLists[i].tail, task);
 }
+
 void HTdelete(long id) {
 	int i = hash(id, M);
-	TLdelete(heads[i], id);
+	TLdelete(hashTableTaskLists[i].head, id);
+}
+
+void HTshow() {
+	int i;
+	for (i = 0; i < M; i++) {
+		TLprint(hashTableTaskLists[i].head);
+	}
 }

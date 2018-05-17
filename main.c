@@ -8,16 +8,18 @@
 #define DEPENDECIES_SIZE 1000000
 #define COMMAND_MAX_SIZE 9
 
-void add(TaskList head, TaskList tail)
+GlobalTaskList globalTaskList;
+
+void add()
 {
-	TaskList dependeciesHead = NULL;
-	unsigned long id, duration;
+	char *end;
+	TaskList dependeciesHead = NULL, dependeciesTail = NULL;
+	Task newTask;
+	unsigned long id, duration, longFromCommand, canInsert = 1;
 	char *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
 
 	if (scanf("%lu \"%[^\"]\" %lu", &id, description, &duration) != 3)
-	{
 		printf("illegal arguments\n");
-	}
 	else
 	{
 		if (HTsearch(id) != NULL)
@@ -25,47 +27,63 @@ void add(TaskList head, TaskList tail)
 			printf("%s\n", "id already exists");
 		}
 		else
-		{
+		{	
 			fgets(ids, DEPENDECIES_SIZE, stdin);
-
-			for (s = strtok(ids, " \t"); s; s = strtok(0, " \t"))
+			if (strcmp(ids, "\n") != 0)
 			{
-				printf("dependecies ID: %s\n", ids);
+				printf("-%s\n",ids);
+				for (s = strtok(ids, " \t"); s; s = strtok(0, " \t"))
+				{
+					longFromCommand = strtoul(s, &end, 10);
 
+					if (HTsearch(longFromCommand) == NULL)
+					{
+						printf("no such task\n");
+						canInsert = 0;
+						break;
+					} else {
+						TLinsert(dependeciesHead, dependeciesTail, HTsearch(longFromCommand)->task);
+					}
+				}
+			}
+			if (canInsert)
+			{	
+				newTask = createTask(id, description, duration, dependeciesHead);
+				globalTaskList = TLinsert(globalTaskList.head, globalTaskList.tail, newTask);
+				HTinsert(newTask);
 			}
 		}
-		TLinsert(head, tail, newTask(id, description, duration, dependeciesHead));
 	}
 }
 
-void printTaskbyDuration(TaskList head)
+void printTaskbyDuration()
 {
-    char valueString[MAX_DESCRIPTION_SIZE];
-    fgets(valueString, MAX_DESCRIPTION_SIZE, stdin);
-    printf("printTaskbyDuration\n");
+	char valueString[MAX_DESCRIPTION_SIZE];
+	fgets(valueString, MAX_DESCRIPTION_SIZE, stdin);
+	printf("printTaskbyDuration\n");
 }
 
 void listDependentTasks()
 {
-    printf("duration\n");
+	printf("duration\n");
 }
 
-void removeTaskFromProject(TaskList head)
+void removeTaskFromProject()
 {
-    unsigned long id;
-    scanf("%lu", &id);
-    TLdelete(head, id);
+	unsigned long id;
+	scanf("%lu", &id);
+	TLdelete(globalTaskList.head, id);
 }
 
-void readCommands(TaskList head, TaskList tail)
+void readCommands()
 {
 	char command[COMMAND_MAX_SIZE];
 	while (scanf("%9s", command) == 1 && strcmp(command, "exit"))
 	{
-		printf("%s\n", command);
+		printf("-%s\n", command);
 		if (!strcmp(command, "add"))
 		{
-			add(head, tail);
+			add();
 		}
 		else if (!strcmp(command, "duration"))
 		{
@@ -76,7 +94,7 @@ void readCommands(TaskList head, TaskList tail)
 		}
 		else if (!strcmp(command, "remove"))
 		{
-			removeTaskFromProject(head);
+			removeTaskFromProject();
 		}
 		else if (!strcmp(command, "path"))
 		{
@@ -91,9 +109,11 @@ void readCommands(TaskList head, TaskList tail)
 int main(int argc, char const *argv[])
 {
 	unsigned long m = 10;
-	TaskList head = NULL;
-	TaskList tail = NULL;
+	globalTaskList.head = NULL;
+	globalTaskList.tail = NULL;
 	HTinit(m);
-	readCommands(head, tail);
+	readCommands(globalTaskList.head, globalTaskList.tail);
+	TLprint(globalTaskList.head);
+	HTshow();
 	return 0;
 }

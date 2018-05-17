@@ -1,11 +1,12 @@
 #include <stdlib.h>
+#include <string.h>
 #include "linkedList.h"
 
 
-Task newTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead) {
+Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead) {
 	Task task = (Task) malloc(sizeof(struct task));
 	task->id = id;
-	task->description = description;
+	strcpy(task->description,description);
 	task->duration = duration;
 	task->ids = idsHead;
 	return task;

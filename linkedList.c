@@ -3,112 +3,113 @@
 #include <stdlib.h>
 #include "linkedList.h"
 
-/*void TLprint(TaskList head) {
-   struct node *ptr = head;
-   printf("\n[ ");
-
-   while (ptr != NULL) {
-      printf("(%d,%d) ", ptr->key, ptr->data);
-      ptr = ptr->next;
-   }
-
-   printf(" ]");
-}
-*/
-void TLinsert(TaskList head, TaskList tail, Task task)
+void TLprint(TaskList head)
 {
-      TaskList link = (TaskList)malloc(sizeof(TaskList *));
+	TaskList p;
+	for (p = head; p; p = p->next)
+	{
+		printf("%s - ", p->task->description);
+	}
+	printf("\n");
+}
 
-      /*for (p = head; p->next; p = p->next);*/
-      printf("debug - id : %lu\n", task->id);
-      if (head == NULL)
-      {
-            head = link;
-            tail = link;
-            link->task = task;
-            link->next = NULL;
-      }
-      else
-      {
-            tail->next = link;
-            tail = link;
-            link->task = task;
-            link->next = NULL;
-      }
+GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
+{
+	GlobalTaskList listPointers;
+	TaskList link = (TaskList)malloc(sizeof(struct node));
+
+	if (!head)
+	{
+		head = link;
+		tail = link;
+		link->task = task;
+		link->next = NULL;
+	}
+	else
+	{
+		tail->next = link;
+		tail = link;
+		link->task = task;
+		link->next = NULL;
+	}
+
+	listPointers.head = head;
+	listPointers.tail = tail;
+	return listPointers;
 }
 
 void TLdelete(TaskList head, unsigned long id)
 {
-      TaskList current, previous = head;
-      int exist = 0;
+	TaskList current, previous = head;
+	int exist = 0;
 
-      for (current = head; current->next; current = current->next,
-          previous = current)
-      {
-            if (current->task->id == id)
-            {
-                  exist = 1;
-                  if (taskHasDependencies(current->task))
-                  {
-                        printf("%s\n", "task with dependencies");
-                  }
-                  else
-                  {
-                        previous->next = current->next;
-                        free(current);
-                  }
-                  break;
-            }
-      }
+	for (current = head; current->next; current = current->next,
+		previous = current)
+	{
+		if (current->task->id == id)
+		{
+			exist = 1;
+			if (taskHasDependencies(current->task))
+			{
+				printf("%s\n", "task with dependencies");
+			}
+			else
+			{
+				previous->next = current->next;
+				free(current);
+			}
+			break;
+		}
+	}
 
-      if (!exist)
-      {
-            printf("%s\n", "no such task");
-      }
+	if (!exist)
+	{
+		printf("%s\n", "no such task");
+	}
 }
 
 int TLisEmpty(TaskList head)
 {
-      return head == NULL;
+	return head == NULL;
 }
 
 int TLlength(TaskList head)
 {
-      int length = 0;
-      struct node *current;
+	int length = 0;
+	struct node *current;
 
-      for (current = head; current != NULL; current = current->next)
-      {
-            length++;
-      }
+	for (current = head; current != NULL; current = current->next)
+	{
+		length++;
+	}
 
-      return length;
+	return length;
 }
 
 TaskList TLsearch(TaskList head, unsigned long id)
 {
 
-      TaskList current = head;
+	TaskList current = head;
 
-      if (head == NULL)
-      {
-            return NULL;
-      }
+	if (head == NULL)
+	{
+		return NULL;
+	}
 
-      while (current->task->id != id)
-      {
+	while (current->task->id != id)
+	{
 
-            if (current->next == NULL)
-            {
-                  return NULL;
-            }
-            else
-            {
-                  current = current->next;
-            }
-      }
+		if (current->next == NULL)
+		{
+			return NULL;
+		}
+		else
+		{
+			current = current->next;
+		}
+	}
 
-      return current;
+	return current;
 }
 /*
 TaskList TLdelete(int key) {
@@ -117,23 +118,23 @@ TaskList TLdelete(int key) {
    struct node* previous = NULL;
 
    if (head == NULL) {
-      return NULL;
+	return NULL;
    }
 
    while (current->key != key) {
 
-      if (current->next == NULL) {
-         return NULL;
-      } else {
-         previous = current;
-         current = current->next;
-      }
+	if (current->next == NULL) {
+	   return NULL;
+	} else {
+	   previous = current;
+	   current = current->next;
+	}
    }
 
    if (current == head) {
-      head = head->next;
+	head = head->next;
    } else {
-      previous->next = current->next;
+	previous->next = current->next;
    }
 
    return current;
@@ -149,23 +150,23 @@ void TLsort() {
    k = size ;
 
    for ( i = 0 ; i < size - 1 ; i++, k-- ) {
-      current = head;
-      next = head->next;
+	current = head;
+	next = head->next;
 
-      for ( j = 1 ; j < k ; j++ ) {
+	for ( j = 1 ; j < k ; j++ ) {
 
-         if ( current->data > next->data ) {
-            tempData = current->data;
-            current->data = next->data;
-            next->data = tempData;
+	   if ( current->data > next->data ) {
+		tempData = current->data;
+		current->data = next->data;
+		next->data = tempData;
 
-            tempKey = current->key;
-            current->key = next->key;
-            next->key = tempKey;
-         }
+		tempKey = current->key;
+		current->key = next->key;
+		next->key = tempKey;
+	   }
 
-         current = current->next;
-         next = next->next;
-      }
+	   current = current->next;
+	   next = next->next;
+	}
    }
 }*/

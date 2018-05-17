@@ -14,3 +14,4 @@ void HTinsert(Task task);
 
 void HTdelete(long id);
 
+void HTshow();
