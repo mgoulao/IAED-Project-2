@@ -12,14 +12,10 @@ typedef struct node {
 	struct node *next;
 } *TaskList;
 
-typedef struct {
-	TaskList head, tail;
-} *ListPointers;
-
 Task newTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead);
 int taskHasDependencies(Task task);
 
-void TLprint(ListPointers listPointers);
-void TLinsert(ListPointers listPointers, Task task);
-void TLdelete(ListPointers listPointers, unsigned long id);
-TaskList TLsearch(ListPointers listPointers, unsigned long id);
+void TLprint(TaskList head);
+void TLinsert(TaskList head, TaskList tail, Task task);
+void TLdelete(TaskList head, unsigned long id);
+TaskList TLsearch(TaskList head, unsigned long id);

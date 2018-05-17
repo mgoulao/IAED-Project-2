@@ -3,7 +3,7 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-static TaskList *heads;
+static TaskList *heads, *tails;
 
 static int M;
 
@@ -11,9 +11,12 @@ void HTinit(int m) {
 	int i;
 	M = m;
 	heads = (TaskList*)malloc(M * sizeof(TaskList));
-	for (i = 0; i < M; i++) heads[i] = NULL;
+	tails = (TaskList*)malloc(M * sizeof(TaskList));
+	for (i = 0; i < M; i++) {
+		heads[i] = NULL;
+		tails[i] = NULL;
+	}
 }
-
 
 TaskList HTsearch(unsigned long int id) {
 	int i = hash(id, M);
@@ -22,7 +25,7 @@ TaskList HTsearch(unsigned long int id) {
 
 void HTinsert(Task task) {
 	int i = hash(key(task), M);
-	TLinsert(heads[i], task);
+	TLinsert(heads[i], tails[i], task);
 }
 void HTdelete(long id) {
 	int i = hash(id, M);

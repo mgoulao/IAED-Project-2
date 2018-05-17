@@ -6,14 +6,15 @@
 
 #define MAX_DESCRIPTION_SIZE 8000
 #define DEPENDECIES_SIZE 1000000
+#define COMMAND_MAX_SIZE 9
 
-void add(ListPointers listPointers)
+void add(TaskList head, TaskList tail)
 {
 	TaskList dependeciesHead = NULL;
 	unsigned long id, duration;
 	char *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
 
-	if (scanf("%lu \"%8000[^\"]s %lu", &id, description, &duration) != 3)
+	if (scanf("%lu \"%[^\"]\" %lu", &id, description, &duration) != 3)
 	{
 		printf("illegal arguments\n");
 	}
@@ -29,11 +30,11 @@ void add(ListPointers listPointers)
 
 			for (s = strtok(ids, " \t"); s; s = strtok(0, " \t"))
 			{
-				printf("ID: %s\n", ids);
+				printf("dependecies ID: %s\n", ids);
 
 			}
 		}
-		TLinsert(listPointers, newTask(id, description, duration, dependeciesHead));
+		TLinsert(head, tail, newTask(id, description, duration, dependeciesHead));
 	}
 }
 
@@ -56,15 +57,15 @@ void removeTaskFromProject(TaskList head)
     TLdelete(head, id);
 }
 
-void readCommands(ListPointers listPointers)
+void readCommands(TaskList head, TaskList tail)
 {
-	char *command;
+	char command[COMMAND_MAX_SIZE];
 	while (scanf("%9s", command) == 1 && strcmp(command, "exit"))
 	{
 		printf("%s\n", command);
 		if (!strcmp(command, "add"))
 		{
-			add(listPointers);
+			add(head, tail);
 		}
 		else if (!strcmp(command, "duration"))
 		{
@@ -75,7 +76,7 @@ void readCommands(ListPointers listPointers)
 		}
 		else if (!strcmp(command, "remove"))
 		{
-			removeTaskFromProject(listPointers);
+			removeTaskFromProject(head);
 		}
 		else if (!strcmp(command, "path"))
 		{
@@ -90,10 +91,9 @@ void readCommands(ListPointers listPointers)
 int main(int argc, char const *argv[])
 {
 	unsigned long m = 10;
-	ListPointers listPointers = (ListPointers)malloc(sizeof(ListPointers*));
-	listPointers->head = NULL;
-	listPointers->tail = NULL;
+	TaskList head = NULL;
+	TaskList tail = NULL;
 	HTinit(m);
-	readCommands(listPointers);
+	readCommands(head, tail);
 	return 0;
 }
