@@ -24,13 +24,26 @@ TaskList HTsearch(unsigned long int id) {
 
 void HTinsert(Task task) {
 	int i = hash(key(task), M);
-	TLprint(hashTableTaskLists[i].head);
 	hashTableTaskLists[i] = TLinsert(hashTableTaskLists[i].head, hashTableTaskLists[i].tail, task);
 }
 
 void HTdelete(long id) {
 	int i = hash(id, M);
-	TLdelete(hashTableTaskLists[i].head, id);
+	TaskList current, previous = hashTableTaskLists[i].head;
+
+	for (current = hashTableTaskLists[i].head; current->next; current = current->next,
+		previous = current)
+	{
+		if (current->task->id == id)
+		{
+			if (!taskHasDependencies(current->task))
+			{
+				previous->next = current->next;
+
+			}
+			break;
+		}
+	}
 }
 
 void HTshow() {

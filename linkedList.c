@@ -40,10 +40,10 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 
 void TLdelete(TaskList head, unsigned long id)
 {
-	TaskList current, previous = head;
+	TaskList current, previous;
 	int exist = 0;
 
-	for (current = head; current->next; current = current->next,
+	for (current = head->next, previous = head; current->next; current = current->next,
 		previous = current)
 	{
 		if (current->task->id == id)

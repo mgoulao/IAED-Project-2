@@ -1,18 +1,21 @@
 typedef struct task *Task;
 typedef struct node *TaskList;
 
-struct task {
+struct task
+{
 	unsigned long id, duration;
 	char description[8000];
 	TaskList ids;
 };
 
-struct node {
+struct node
+{
 	Task task;
 	struct node *next;
 };
 
-typedef struct {
+typedef struct
+{
 	TaskList head, tail;
 } GlobalTaskList;
 
@@ -23,3 +26,4 @@ void TLprint(TaskList head);
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task);
 void TLdelete(TaskList head, unsigned long id);
 TaskList TLsearch(TaskList head, unsigned long id);
+int TLlength(TaskList head);

@@ -31,7 +31,6 @@ void add()
 			fgets(ids, DEPENDECIES_SIZE, stdin);
 			if (strcmp(ids, "\n") != 0)
 			{
-				printf("-%s\n",ids);
 				for (s = strtok(ids, " \t"); s; s = strtok(0, " \t"))
 				{
 					longFromCommand = strtoul(s, &end, 10);
@@ -73,6 +72,7 @@ void removeTaskFromProject()
 	unsigned long id;
 	scanf("%lu", &id);
 	TLdelete(globalTaskList.head, id);
+	HTdelete(id);
 }
 
 void readCommands()

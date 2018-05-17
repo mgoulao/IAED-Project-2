@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "linkedList.h"
 
 
@@ -14,7 +15,8 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
 
 int taskHasDependencies(Task task) {
 	int hasDependecies = 1;
-	if (sizeof(task->ids) == 0) {
+	printf("%d\n", TLlength(task->ids));
+	if (TLlength(task->ids) == 0) {
 		hasDependecies = 0;
 	}
 	return hasDependecies;
