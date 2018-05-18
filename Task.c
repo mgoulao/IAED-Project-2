@@ -13,6 +13,18 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
 	return task;
 }
 
+void listTask(TaskList head, int condition , int criticalPathValidation) {
+	TaskList p;
+	for (p = head; p; p = p->next)
+	{
+		printf("%lu \"%s\" %lu", p->task->id, p->task->description, p->task->duration);
+		if(criticalPathValidation) {
+			printf("[  ]")
+		}
+	}
+	printf("\n");
+} 
+
 int taskHasDependencies(Task task) {
 	int hasDependecies = 1;
 	printf("%d\n", TLlength(task->ids));

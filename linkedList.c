@@ -13,6 +13,7 @@ void TLprint(TaskList head)
 	printf("\n");
 }
 
+
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 {
 	GlobalTaskList listPointers;
