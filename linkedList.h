@@ -14,7 +14,7 @@ struct node
 	struct node *next;
 };
 
-typedef struct
+typedef struct taskListPointers
 {
 	TaskList head, tail;
 } GlobalTaskList;

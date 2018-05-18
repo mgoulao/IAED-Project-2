@@ -13,10 +13,12 @@ GlobalTaskList globalTaskList;
 void add()
 {
 	char *end;
-	TaskList dependeciesHead = NULL, dependeciesTail = NULL;
+	struct taskListPointers dependeciesPointer;
 	Task newTask;
 	unsigned long id, duration, longFromCommand, canInsert = 1;
 	char *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
+
+	dependeciesPointer.head = NULL, dependeciesPointer.tail = NULL;
 
 	if (scanf("%lu \"%[^\"]\" %lu", &id, description, &duration) != 3)
 		printf("illegal arguments\n");
@@ -27,7 +29,7 @@ void add()
 			printf("%s\n", "id already exists");
 		}
 		else
-		{	
+		{
 			fgets(ids, DEPENDECIES_SIZE, stdin);
 			if (strcmp(ids, "\n") != 0)
 			{
@@ -39,16 +41,20 @@ void add()
 					{
 						printf("no such task\n");
 						canInsert = 0;
-						TLdelete(dependeciesHead);
+						TLdelete(dependeciesPointer.head);
 						break;
-					} else {
-						TLinsert(dependeciesHead, dependeciesTail, HTsearch(longFromCommand)->task);
+					}
+					else
+					{
+						dependeciesPointer = TLinsert(dependeciesPointer.head, dependeciesPointer.tail,
+													  HTsearch(longFromCommand)->task);
 					}
 				}
 			}
 			if (canInsert)
-			{	
-				newTask = createTask(id, description, duration, dependeciesHead);
+			{
+				TLprint(dependeciesPointer.head);
+				newTask = createTask(id, description, duration, dependeciesPointer.head);
 				globalTaskList = TLinsert(globalTaskList.head, globalTaskList.tail, newTask);
 				HTinsert(newTask);
 			}
@@ -66,6 +72,42 @@ void printTaskbyDuration()
 void listDependentTasks()
 {
 	printf("duration\n");
+}
+
+void printDependentTasks()
+{
+	unsigned long id;
+	TaskList p, dependeciePointer = NULL;
+	struct taskListPointers dependentTasks;
+	dependentTasks.head = NULL;
+	dependentTasks.tail = NULL;
+	scanf("%lu", &id);
+
+	for (p = globalTaskList.head; p; p = p->next)
+	{
+		dependeciePointer = TLsearch(p->task->ids, id);
+		printf("dependent id - %lu\n", p->task->ids);
+		TLprint(p->task->ids);
+
+		if (dependeciePointer)
+		{
+			dependentTasks = TLinsert(dependentTasks.head, dependentTasks.tail, p->task);
+		}
+	}
+
+	printf("%lu:", id);
+	if (TLlength(dependentTasks.head))
+	{
+		for (p = dependentTasks.head; p; p = p->next)
+		{
+			printf(" %lu", p->task->id);
+		}
+		printf("\n");
+	}
+	else
+	{
+		printf(" no dependencies\n");
+	}
 }
 
 void removeTaskFromProject()
@@ -92,6 +134,7 @@ void readCommands()
 		}
 		else if (!strcmp(command, "depend"))
 		{
+			printDependentTasks();
 		}
 		else if (!strcmp(command, "remove"))
 		{

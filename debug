@@ -7,5 +7,6 @@ add 1044 "task 4" 7 8476
 add 897 "task 5" 9 8476 3390
 add 23986 "task 6" 12 1044 897
 remove 235
+depend 8391
 duration
 exit
