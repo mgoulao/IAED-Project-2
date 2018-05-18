@@ -39,6 +39,7 @@ void add()
 
 					if (HTsearch(longFromCommand) == NULL)
 					{
+						printf("%lu\n", id);
 						printf("no such task\n");
 						canInsert = 0;
 						TLdelete(dependeciesPointer.head);
@@ -61,25 +62,17 @@ void add()
 	}
 }
 
-void printTaskbyDuration()
-{
-	char valueString[MAX_DESCRIPTION_SIZE];
-	fgets(valueString, MAX_DESCRIPTION_SIZE, stdin);
-	printf("printTaskbyDuration\n");
-}
-
 void listTasksByDuration(int criticalPathValidation)
 {
-	unsigned long duration;
-	TaskList p;
-
-	scanf("%lu", duration);
+	unsigned long duration = 0;
+	if (getchar() != '\n')
+	{
+		scanf("%lu", &duration);
+}
 
 	if (duration)
 	{
-		for(p = globalTaskList.head; p; p = p->next) {
-			if(p->task->)
-		}
+		TLprint(globalTaskList.head, 'd', duration, criticalPathValidation);
 		if (criticalPathValidation)
 		{
 			printf("[0 CRITICAL]");
@@ -87,6 +80,7 @@ void listTasksByDuration(int criticalPathValidation)
 	}
 	else
 	{
+		TLprint(globalTaskList.head, 'c', 0, criticalPathValidation);
 		if (criticalPathValidation)
 		{
 			printf("[0 CRITICAL]");
@@ -97,13 +91,10 @@ void listTasksByDuration(int criticalPathValidation)
 void printDependentTasks()
 {
 	unsigned long id;
-	TaskList p, dependeciePointer = NULL;
-	struct taskListPointers dependentTasks;
-	dependentTasks.head = NULL;
-	dependentTasks.tail = NULL;
+	TaskList p, dependentTasksHead = NULL;
 	scanf("%lu", &id);
 
-	for (p = globalTaskList.head; p; p = p->next)
+	/*for (p = globalTaskList.head; p; p = p->next)
 	{
 		dependeciePointer = TLsearch(p->task->ids, id);
 
@@ -111,12 +102,15 @@ void printDependentTasks()
 		{
 			dependentTasks = TLinsert(dependentTasks.head, dependentTasks.tail, p->task);
 		}
-	}
+	}*/
+
+	dependentTasksHead = getDependentTasks(globalTaskList, id);
+
 
 	printf("%lu:", id);
-	if (TLlength(dependentTasks.head))
+	if (TLlength(dependentTasksHead))
 	{
-		for (p = dependentTasks.head; p; p = p->next)
+		for (p = dependentTasksHead; p; p = p->next)
 		{
 			printf(" %lu", p->task->id);
 		}
@@ -132,8 +126,10 @@ void removeTaskFromProject()
 {
 	unsigned long id;
 	scanf("%lu", &id);
-	TLdeleteAndFree(globalTaskList.head, id);
-	HTdelete(id);
+	/*TLprintId(globalTaskList.head);
+	printf("delete %lu -----\n", id);*/
+	globalTaskList = TLTaskdelete(globalTaskList, id);
+	/*HTdelete(id);*/
 }
 
 void readCommands()

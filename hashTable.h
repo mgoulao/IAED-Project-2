@@ -1,3 +1,6 @@
+#ifndef _HASH_
+#define _HASH_
+
 #define key(a) (a->id)
 #define hash(A,B) (A%B)
 
@@ -15,3 +18,5 @@ void HTinsert(Task task);
 void HTdelete(long id);
 
 void HTshow();
+
+#endif

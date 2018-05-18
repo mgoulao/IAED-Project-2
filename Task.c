@@ -3,33 +3,79 @@
 #include <stdio.h>
 #include "linkedList.h"
 
-
-Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead) {
-	Task task = (Task) malloc(sizeof(struct task));
+Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead)
+{
+	Task task = (Task)malloc(sizeof(struct task));
 	task->id = id;
-	strcpy(task->description,description);
+	strcpy(task->description, description);
 	task->duration = duration;
 	task->ids = idsHead;
 	return task;
 }
 
-void listTask(TaskList head, int condition , int criticalPathValidation) {
-	TaskList p;
-	for (p = head; p; p = p->next)
-	{
-		printf("%lu \"%s\" %lu", p->task->id, p->task->description, p->task->duration);
-		if(criticalPathValidation) {
-			printf("[  ]")
-		}
-	}
-	printf("\n");
-} 
+int taskHasBiggerDuration(Task task, unsigned long duration)
+{
+	return task->duration >= duration;
+}
 
-int taskHasDependencies(Task task) {
+int criticalTask(Task task)
+{
+	return 1;
+}
+
+void listTask(Task task, int criticalPathValidation)
+{
+	printf("%lu \"%s\" %lu", task->id, task->description, task->duration);
+	if (criticalPathValidation)
+	{
+		printf("[  ]");
+	}
+	TLprintId(task->ids);
+}
+
+int taskHasDependencies(Task task)
+{
 	int hasDependecies = 1;
-	printf("%d\n", TLlength(task->ids));
-	if (TLlength(task->ids) == 0) {
+	if (TLlength(task->ids) == 0)
+	{
 		hasDependecies = 0;
 	}
 	return hasDependecies;
+}
+
+int taskHasDependents(GlobalTaskList globalTaskList, Task task)
+{
+	int hasDependents = 1;
+	TaskList dependentsHead = NULL;
+
+	dependentsHead = getDependentTasks(globalTaskList, task->id);
+
+	if (dependentsHead == NULL)
+	{
+		return 0;
+	}
+
+	if (!TLlength(dependentsHead))
+		hasDependents = 0;
+
+	return hasDependents;
+}
+
+TaskList getDependentTasks(GlobalTaskList globalTaskList, unsigned long id)
+{
+	TaskList p, dependeciePointer = NULL;
+	struct taskListPointers dependentTasks;
+	dependentTasks.head = NULL;
+	dependentTasks.tail = NULL;
+
+	for (p = globalTaskList.head; p; p = p->next)
+	{
+		dependeciePointer = TLsearch(p->task->ids, id);
+
+		if (dependeciePointer)
+		{
+			dependentTasks = TLinsert(dependentTasks.head, dependentTasks.tail, p->task);
+		}
+	}
+	return dependentTasks.head;
 }
