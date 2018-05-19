@@ -274,11 +274,13 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
 	TaskList p;
 	if (TLisEmpty(node->task->ids))
 	{
-		node->task->lateStart = 0;
+		node->task->lateStart = duration - node->task->duration;
 	}
 	if (node->task->lateStart == BIG_TASK_TIME)
 	{
 		node->task->lateStart = duration - node->task->duration;
+		printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);
+
 
 		for (p = node->task->ids; p; p = p->next)
 			TLcalculateLateStart(p, duration - node->task->duration);

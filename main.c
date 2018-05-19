@@ -4,7 +4,7 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-#define MAX_DESCRIPTION_SIZE 8001
+#define MAX_DESCRIPTION_SIZE 8010
 #define DEPENDECIES_SIZE 80000
 #define COMMAND_MAX_SIZE 9
 
@@ -18,13 +18,6 @@ GlobalTaskList globalTaskList;
  */
 void add()
 {
-	/*
-	char description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
-
-	unsigned long id, duration;
-	scanf("%lu \"%[^\"]\" %lu", &id, description, &duration);
-	fgets(ids, DEPENDECIES_SIZE, stdin);*/
-
 	char *end, *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
 	struct taskListPointers dependeciesPointer;
 	Task newTask;
@@ -99,16 +92,6 @@ void printDependentTasks()
 {
 	unsigned long id;
 	TaskList p, dependentTasksHead = NULL;
-
-	/*for (p = globalTaskList.head; p; p = p->next)
-	{
-		dependeciePointer = TLsearch(p->task->ids, id);
-
-		if (dependeciePointer)
-		{
-			dependentTasks = TLinsert(dependentTasks.head, dependentTasks.tail, p->task);
-		}
-	}*/
 
 	if (scanf("%lu", &id) != 1 || id == 0)
 	{
