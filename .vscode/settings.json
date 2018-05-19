@@ -3,6 +3,7 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "tasklist.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "linkedlist.h": "c"
     }
 }

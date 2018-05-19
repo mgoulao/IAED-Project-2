@@ -1,14 +1,11 @@
 12 "task12" 10
 id already exists
-10
 no such task
-11
+illegal arguments
 no such task
 id already exists
-illegal arguments
-11
 no such task
+illegal arguments
 12 "task12" 10
 10 "task" 8 12
-0 "task" 8 12
 12 "task12" 10

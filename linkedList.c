@@ -4,7 +4,6 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-
 /*
  * Function:  TLprintId 
  * --------------------
@@ -42,6 +41,10 @@ void TLprint(TaskList head, char condition, unsigned long duration, int critical
 			listTask(p->task, criticalPathValidation);
 		}
 		else if (condition == 'c' && criticalTask(p->task))
+		{
+			listTask(p->task, criticalPathValidation);
+		}
+		else if (condition == 'a')
 		{
 			listTask(p->task, criticalPathValidation);
 		}
@@ -101,7 +104,7 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 		{
 			exist = 1;
 
-			if (taskHasDependents(globalTaskList, current->task))
+			if (taskHasDependents(globalTaskList.head, current->task))
 			{
 				printf("%s\n", "task with dependencies");
 			}
@@ -121,6 +124,8 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 					}
 					previous->next = current->next;
 				}
+				ResetTasksTime(globalTaskList.head);
+				globalTaskList.criticalPathValidation = 0;
 				free(current->task);
 				free(current);
 				HTdelete(id);
@@ -225,4 +230,87 @@ TaskList TLsearch(TaskList head, unsigned long id)
 	}
 
 	return current;
+}
+
+void ResetTasksTime(TaskList head)
+{
+	TaskList p;
+
+	for (p = head; p; p = p->next)
+	{
+		p->task->earlyStart = BIG_TASK_TIME;
+		p->task->lateStart = BIG_TASK_TIME;
+	}
+}
+
+unsigned long TLcalculateCriticalPath(TaskList node)
+{
+	unsigned long biggerTime = 0, currentTime = 0;
+	TaskList p;
+	if (TLisEmpty(node->task->ids))
+	{
+		node->task->earlyStart = 0;
+		return node->task->duration;
+	}
+	if (node->task->earlyStart != BIG_TASK_TIME)
+	{
+		return node->task->earlyStart + node->task->duration;
+	}
+	for (p = node->task->ids; p; p = p->next)
+	{
+		currentTime = TLcalculateCriticalPath(p);
+		if (biggerTime < currentTime)
+		{
+			biggerTime = currentTime;
+		}
+	}
+
+	node->task->earlyStart = biggerTime;
+	return biggerTime + node->task->duration;
+}
+
+void TLcalculateLateStart(TaskList node, unsigned long duration)
+{
+	TaskList p;
+	if (TLisEmpty(node->task->ids))
+	{
+		node->task->lateStart = 0;
+	}
+	if (node->task->lateStart == BIG_TASK_TIME)
+	{
+		node->task->lateStart = duration - node->task->duration;
+
+		for (p = node->task->ids; p; p = p->next)
+			TLcalculateLateStart(p, duration - node->task->duration);
+	}
+	else if (node->task->lateStart > duration - node->task->duration)
+	{
+		node->task->lateStart = duration - node->task->duration;
+	}
+}
+
+int TLcalculateTasksTimes(TaskList head)
+{
+	unsigned long duration = 0, currentTime;
+	TaskList p;
+	/*Calculate Early Start*/
+	for (p = head; p; p = p->next)
+	{
+		if (!taskHasDependents(head, p->task))
+		{
+			currentTime = TLcalculateCriticalPath(p);
+			if (currentTime > duration)
+				duration = currentTime;
+		}
+	}
+
+	for (p = head; p; p = p->next)
+	{
+		if (!taskHasDependents(head, p->task))
+		{
+			TLcalculateLateStart(p, duration);
+		}
+	}
+
+	return duration;
 }

@@ -10,6 +10,8 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
 	strcpy(task->description, description);
 	task->duration = duration;
 	task->ids = idsHead;
+	task->earlyStart = BIG_TASK_TIME;
+	task->lateStart = BIG_TASK_TIME;
 	return task;
 }
 
@@ -20,7 +22,7 @@ int taskHasBiggerDuration(Task task, unsigned long duration)
 
 int criticalTask(Task task)
 {
-	return 1;
+	return task->earlyStart == task->lateStart;
 }
 
 void listTask(Task task, int criticalPathValidation)
@@ -28,7 +30,14 @@ void listTask(Task task, int criticalPathValidation)
 	printf("%lu \"%s\" %lu", task->id, task->description, task->duration);
 	if (criticalPathValidation)
 	{
-		printf("[  ]");
+		if (task->earlyStart == task->lateStart)
+		{
+			printf(" [%lu %s]", task->earlyStart, "CRITICAL");
+		}
+		else
+		{
+			printf(" [%lu %lu]", task->earlyStart, task->lateStart);
+		}
 	}
 	TLprintId(task->ids);
 }
@@ -43,39 +52,35 @@ int taskHasDependencies(Task task)
 	return hasDependecies;
 }
 
-int taskHasDependents(GlobalTaskList globalTaskList, Task task)
+int taskHasDependents(TaskList head, Task task)
 {
-	int hasDependents = 1;
 	TaskList dependentsHead = NULL;
 
-	dependentsHead = getDependentTasks(globalTaskList, task->id);
+	dependentsHead = getDependentTasks(head, task->id);
 
 	if (dependentsHead == NULL)
 	{
 		return 0;
 	}
 
-	if (!TLlength(dependentsHead))
-		hasDependents = 0;
-
-	return hasDependents;
+	return 1;
 }
 
-TaskList getDependentTasks(GlobalTaskList globalTaskList, unsigned long id)
+TaskList getDependentTasks(TaskList head, unsigned long id)
 {
 	TaskList p, dependeciePointer = NULL;
 	struct taskListPointers dependentTasks;
 	dependentTasks.head = NULL;
 	dependentTasks.tail = NULL;
 
-	for (p = globalTaskList.head; p; p = p->next)
+	for (p = head; p; p = p->next)
 	{
 		dependeciePointer = TLsearch(p->task->ids, id);
-
 		if (dependeciePointer)
 		{
 			dependentTasks = TLinsert(dependentTasks.head, dependentTasks.tail, p->task);
 		}
 	}
+
 	return dependentTasks.head;
 }

@@ -25,15 +25,17 @@ void add()
 	scanf("%lu \"%[^\"]\" %lu", &id, description, &duration);
 	fgets(ids, DEPENDECIES_SIZE, stdin);*/
 
-	char *end;
+	char *end, *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
 	struct taskListPointers dependeciesPointer;
 	Task newTask;
-	unsigned long id, duration, longFromCommand, canInsert = 1;
-	char *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
+	unsigned long numberInputs = 0, id, duration, longFromCommand, canInsert = 1;
 
 	dependeciesPointer.head = NULL, dependeciesPointer.tail = NULL;
 
-	if (scanf("%lu \"%[^\"]\" %lu", &id, description, &duration) != 3)
+	numberInputs = scanf("%lu \"%[^\"]\" %lu", &id, description, &duration);
+	fgets(ids, DEPENDECIES_SIZE, stdin);
+
+	if (numberInputs != 3 || id == 0 || duration == 0)
 		printf("illegal arguments\n");
 	else
 	{
@@ -43,7 +45,6 @@ void add()
 		}
 		else
 		{
-			fgets(ids, DEPENDECIES_SIZE, stdin);
 			if (strcmp(ids, "\n") != 0)
 			{
 				for (s = strtok(ids, " \t"); s; s = strtok(0, " \t"))
@@ -52,7 +53,7 @@ void add()
 
 					if (HTsearch(longFromCommand) == NULL)
 					{
-						printf("%lu\n", id);
+						/*printf("%lu\n", id);*/
 						printf("no such task\n");
 						canInsert = 0;
 						TLdelete(dependeciesPointer.head);
@@ -70,12 +71,13 @@ void add()
 				newTask = createTask(id, description, duration, dependeciesPointer.head);
 				globalTaskList = TLinsert(globalTaskList.head, globalTaskList.tail, newTask);
 				HTinsert(newTask);
+				globalTaskList.criticalPathValidation = 0;
 			}
 		}
 	}
 }
 
-void listTasksByDuration(int criticalPathValidation)
+void listTasksByDuration()
 {
 	unsigned long duration = 0;
 	if (getchar() != '\n')
@@ -85,19 +87,11 @@ void listTasksByDuration(int criticalPathValidation)
 
 	if (duration)
 	{
-		TLprint(globalTaskList.head, 'd', duration, criticalPathValidation);
-		if (criticalPathValidation)
-		{
-			printf("[0 CRITICAL]");
-		}
+		TLprint(globalTaskList.head, 'd', duration, globalTaskList.criticalPathValidation);
 	}
 	else
 	{
-		TLprint(globalTaskList.head, 'c', 0, criticalPathValidation);
-		if (criticalPathValidation)
-		{
-			printf("[0 CRITICAL]");
-		}
+		TLprint(globalTaskList.head, 'a', 0, globalTaskList.criticalPathValidation);
 	}
 }
 
@@ -105,7 +99,6 @@ void printDependentTasks()
 {
 	unsigned long id;
 	TaskList p, dependentTasksHead = NULL;
-	scanf("%lu", &id);
 
 	/*for (p = globalTaskList.head; p; p = p->next)
 	{
@@ -117,36 +110,64 @@ void printDependentTasks()
 		}
 	}*/
 
-	dependentTasksHead = getDependentTasks(globalTaskList, id);
-
-	printf("%lu:", id);
-	if (TLlength(dependentTasksHead))
+	if (scanf("%lu", &id) != 1 || id == 0)
 	{
-		for (p = dependentTasksHead; p; p = p->next)
-		{
-			printf(" %lu", p->task->id);
-		}
-		printf("\n");
+		printf("illegal arguments\n");
 	}
 	else
 	{
-		printf(" no dependencies\n");
+		if (TLisEmpty(HTsearch(id)))
+		{
+			printf("no such task\n");
+		}
+		else
+		{
+			dependentTasksHead = getDependentTasks(globalTaskList.head, id);
+
+			printf("%lu:", id);
+			if (TLlength(dependentTasksHead))
+			{
+				for (p = dependentTasksHead; p; p = p->next)
+				{
+					printf(" %lu", p->task->id);
+				}
+				printf("\n");
+			}
+			else
+			{
+				printf(" no dependencies\n");
+			}
+		}
 	}
 }
 
 void removeTaskFromProject()
 {
 	unsigned long id;
-	scanf("%lu", &id);
-	/*TLprintId(globalTaskList.head);
+	if (scanf("%lu", &id) != 1 || id == 0)
+	{
+		printf("illegal arguments\n");
+	}
+	else
+	{
+		/*TLprintId(globalTaskList.head);
 	printf("delete %lu -----\n", id);*/
-	globalTaskList = TLTaskdelete(globalTaskList, id);
-	/*HTdelete(id);*/
+		globalTaskList = TLTaskdelete(globalTaskList, id);
+		/*HTdelete(id);*/
+	}
+}
+
+void listTasksFromCriticalPath()
+{
+	unsigned long duration;
+
+	duration = TLcalculateTasksTimes(globalTaskList.head);
+	TLprint(globalTaskList.head, 'c', duration, globalTaskList.criticalPathValidation);
+	printf("project duration = %lu\n", duration);
 }
 
 void readCommands()
 {
-	int criticalPathValidation = 0;
 	char command[COMMAND_MAX_SIZE];
 	while (scanf("%9s", command) == 1 && strcmp(command, "exit"))
 	{
@@ -157,7 +178,7 @@ void readCommands()
 		}
 		else if (!strcmp(command, "duration"))
 		{
-			listTasksByDuration(criticalPathValidation);
+			listTasksByDuration();
 		}
 		else if (!strcmp(command, "depend"))
 		{
@@ -169,6 +190,8 @@ void readCommands()
 		}
 		else if (!strcmp(command, "path"))
 		{
+			globalTaskList.criticalPathValidation = 1;
+			listTasksFromCriticalPath();
 		}
 		else
 		{
@@ -182,6 +205,7 @@ int main()
 	unsigned long m = 1000;
 	globalTaskList.head = NULL;
 	globalTaskList.tail = NULL;
+	globalTaskList.criticalPathValidation = 0;
 	HTinit(m);
 	readCommands(globalTaskList.head, globalTaskList.tail);
 	/*TLprint(globalTaskList.head);
