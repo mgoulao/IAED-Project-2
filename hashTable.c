@@ -7,6 +7,13 @@ static GlobalTaskList *hashTableTaskLists;
 
 static int M;
 
+/*
+ * Function:  HTinit 
+ * --------------------
+ * Initialize the HashTable with a size of m
+ * 
+ * m: size of the HashTable
+ */
 void HTinit(int m)
 {
 	int i;
@@ -19,18 +26,39 @@ void HTinit(int m)
 	}
 }
 
+/*
+ * Function:  HTsearch 
+ * --------------------
+ * Search for a Task with a given Id and returns the node Pointer
+ * 
+ * id: Requested Task id
+ */
 TaskList HTsearch(unsigned long int id)
 {
 	int i = hash(id, M);
 	return TLsearch(hashTableTaskLists[i].head, id);
 }
 
+/*
+ * Function:  HTinsert 
+ * --------------------
+ * Insert the Task to the HashTable
+ * 
+ * task: The task to insert
+ */
 void HTinsert(Task task)
 {
 	int i = hash(key(task), M);
 	hashTableTaskLists[i] = TLinsert(hashTableTaskLists[i].head, hashTableTaskLists[i].tail, task);
 }
 
+/*
+ * Function:  HTdelete 
+ * --------------------
+ * Deletes the Task from  HashTable
+ * 
+ * id: Id of the Task to delete
+ */
 void HTdelete(unsigned long id)
 {
 	int i = hash(id, M);

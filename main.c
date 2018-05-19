@@ -4,14 +4,27 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-#define MAX_DESCRIPTION_SIZE 8000
-#define DEPENDECIES_SIZE 1000000
+#define MAX_DESCRIPTION_SIZE 8001
+#define DEPENDECIES_SIZE 80000
 #define COMMAND_MAX_SIZE 9
 
 GlobalTaskList globalTaskList;
 
+/*
+ * Function:  add 
+ * --------------------
+ * Adds a Task to a global TaskList and a HashTable
+ *
+ */
 void add()
 {
+	/*
+	char description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
+
+	unsigned long id, duration;
+	scanf("%lu \"%[^\"]\" %lu", &id, description, &duration);
+	fgets(ids, DEPENDECIES_SIZE, stdin);*/
+
 	char *end;
 	struct taskListPointers dependeciesPointer;
 	Task newTask;
@@ -68,7 +81,7 @@ void listTasksByDuration(int criticalPathValidation)
 	if (getchar() != '\n')
 	{
 		scanf("%lu", &duration);
-}
+	}
 
 	if (duration)
 	{
@@ -105,7 +118,6 @@ void printDependentTasks()
 	}*/
 
 	dependentTasksHead = getDependentTasks(globalTaskList, id);
-
 
 	printf("%lu:", id);
 	if (TLlength(dependentTasksHead))

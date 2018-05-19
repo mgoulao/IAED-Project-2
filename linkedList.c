@@ -4,6 +4,14 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
+
+/*
+ * Function:  TLprintId 
+ * --------------------
+ * Prints all tasks Id from TaskList by insertion order 
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 void TLprintId(TaskList head)
 {
 	TaskList p;
@@ -14,6 +22,16 @@ void TLprintId(TaskList head)
 	printf("\n");
 }
 
+/*
+ * Function:  TLprint 
+ * --------------------
+ * Prints all tasks from TaskList by insertion order, that check the given condition 
+ * 
+ * head: Pointer for the first element of the TaskList
+ * condition: Selects the condition
+ * duration: minimum duration that a task must have to be printed
+ * criticalPathValidation: flag used to know if the critical path is valid
+ */
 void TLprint(TaskList head, char condition, unsigned long duration, int criticalPathValidation)
 {
 	TaskList p;
@@ -30,6 +48,13 @@ void TLprint(TaskList head, char condition, unsigned long duration, int critical
 	}
 }
 
+/*
+ * Function:  TLprintId 
+ * --------------------
+ * Prints all task Id from TaskList by insertion order 
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 {
 	GlobalTaskList listPointers;
@@ -55,6 +80,14 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 	return listPointers;
 }
 
+/*
+ * Function:  TLTaskdelete 
+ * --------------------
+ * Deletes a given Task from the TaskList 
+ * 
+ * globalTaskList: struct with Pointers to the beginning and end of the TaskList
+ * id: ID of the Task to delete
+ */
 GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 {
 	TaskList current, previous;
@@ -80,7 +113,7 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 				}
 				else
 				{
-					
+
 					if (current->next == NULL)
 					{
 						globalTaskList.tail = previous;
@@ -101,26 +134,48 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 	return globalTaskList;
 }
 
+/*
+ * Function:  TLdelete 
+ * --------------------
+ * Deletes a given TaskList, but not the Tasks
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 void TLdelete(TaskList head)
 {
-	TaskList current, previous;
+	TaskList current;
 
 	if (TLlength(head) > 0)
 	{
-		for (current = head->next, previous = head; current->next; current = current->next,
-			previous = current)
+		while (head)
 		{
+			current = head;
+			head = current->next;
 
-			previous->next = current->next;
+			free(current);
 		}
 	}
 }
 
+/*
+ * Function:  TLdelete 
+ * --------------------
+ * Checks if the TaskList is empty
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 int TLisEmpty(TaskList head)
 {
 	return head == NULL;
 }
 
+/*
+ * Function:  TLlength 
+ * --------------------
+ * Returns the TaskList length
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 int TLlength(TaskList head)
 {
 	int length = 0;
@@ -138,6 +193,14 @@ int TLlength(TaskList head)
 	return length;
 }
 
+/*
+ * Function:  TLsearch 
+ * --------------------
+ * Returns a Pointer to the position of the node with the requested Task
+ * 
+ * head: Pointer for the first element of the TaskList
+ * id: Id of the requested Task
+ */
 TaskList TLsearch(TaskList head, unsigned long id)
 {
 
@@ -163,33 +226,3 @@ TaskList TLsearch(TaskList head, unsigned long id)
 
 	return current;
 }
-/*
-TaskList TLdelete(int key) {
-
-   struct node* current = head;
-   struct node* previous = NULL;
-
-   if (head == NULL) {
-	return NULL;
-   }
-
-   while (current->key != key) {
-
-	if (current->next == NULL) {
-	   return NULL;
-	} else {
-	   previous = current;
-	   current = current->next;
-	}
-   }
-
-   if (current == head) {
-	head = head->next;
-   } else {
-	previous->next = current->next;
-   }
-
-   return current;
-}
-
-}*/
