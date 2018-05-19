@@ -31,7 +31,7 @@ void HTinsert(Task task)
 	hashTableTaskLists[i] = TLinsert(hashTableTaskLists[i].head, hashTableTaskLists[i].tail, task);
 }
 
-void HTdelete(long id)
+void HTdelete(unsigned long id)
 {
 	int i = hash(id, M);
 	TaskList current, previous;

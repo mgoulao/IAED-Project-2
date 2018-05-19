@@ -165,7 +165,7 @@ void readCommands()
 	}
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
 	unsigned long m = 1000;
 	globalTaskList.head = NULL;
