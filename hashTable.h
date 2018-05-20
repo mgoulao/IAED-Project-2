@@ -17,6 +17,4 @@ void HTinsert(Task task);
 
 void HTdelete(unsigned long id);
 
-void HTshow();
-
 #endif

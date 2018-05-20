@@ -1,4 +1,27 @@
+--- head -- 0 -- desc - task 1 
+--- head -- 0 -- desc - task 1 
+--- head -- 0 -- desc - task 1 
+--- head -- 86196032 -- desc - task 2 
+--- head -- 0 -- desc - task 2 
+--- head -- 0 -- desc - task 1 
+--- head -- 86196032 -- desc - task 3 
+--- head -- 0 -- desc - task 3 
+--- head -- 0 -- desc - task 2 
+--- head -- 86196032 -- desc - task 4 
+--- head -- 0 -- desc - task 4 
+--- head -- 0 -- desc - task 2 
+--- head -- 86201824 -- desc - task 3 
+--- head -- 86196032 -- desc - task 5 
+--- head -- 0 -- desc - task 5 
+--- head -- 0 -- desc - task 4 
+--- head -- 86202400 -- desc - task 5 
+--- head -- 86196032 -- desc - task 6 
+--- head -- 0 -- desc - task 6 
+desc -- task 6 prev -- 0 next -- 0 
+task with dependencies
 8391 "task 1" 4
 8476 "task 2" 3 8391
 3390 "task 3" 8 8391
+1044 "task 4" 7 8476
 897 "task 5" 9 8476 3390
+23986 "task 6" 12 1044 897

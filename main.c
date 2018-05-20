@@ -161,8 +161,7 @@ int main()
 	HTinit(m);
 
 	readCommands(globalTaskList.head, globalTaskList.tail);
-	/*TLprint(globalTaskList.head);
-	HTshow();*/
+
 
 	return 0;
 }
