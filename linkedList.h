@@ -12,6 +12,7 @@ typedef struct node *TaskList;
 
 struct task
 {
+	int numberOfDependents;
 	unsigned long id, duration, earlyStart, lateStart;
 	char *description;
 	TaskList ids;
@@ -31,6 +32,7 @@ typedef struct taskListPointers
 
 Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead);
 GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int checkDependecies);
+void incrementnumberOfDependents(TaskList head);
 int taskHasDependencies(Task task);
 int taskHasDependents(TaskList head, Task task);
 int taskHasBiggerDuration(Task task, unsigned long duration);

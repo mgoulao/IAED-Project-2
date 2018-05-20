@@ -64,6 +64,7 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 {
 	GlobalTaskList listPointers;
 	TaskList link = (TaskList)malloc(sizeof(struct node));
+
 	if (!head)
 	{
 		head = link;
@@ -208,7 +209,6 @@ void ResetTasksLateStart(TaskList head)
 
 	for (p = head; p; p = p->next)
 	{
-		/*p->task->earlyStart = BIG_TASK_TIME;*/
 		p->task->lateStart = BIG_TASK_TIME;
 	}
 }
@@ -264,7 +264,6 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
 	else if (duration - node->task->duration <= node->task->lateStart)
 	{
 		node->task->lateStart = duration - node->task->duration;
-		/*printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);*/
 
 		for (p = node->task->ids; p; p = p->next)
 			TLcalculateLateStart(p, duration - node->task->duration);
@@ -283,12 +282,12 @@ int TLcalculateTasksTimes(TaskList head)
 {
 	unsigned long duration = 0, currentTime;
 	TaskList p;
+
 	/*Calculate Early Start*/
 	for (p = head; p; p = p->next)
 	{
 		if (!taskHasDependents(head, p->task))
 		{
-			/*printf("--- end --- id-- %lu \n", p->task->id);*/
 			currentTime = TLcalculateDuration(p);
 			if (currentTime > duration)
 			{

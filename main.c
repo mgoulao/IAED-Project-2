@@ -6,6 +6,16 @@
 
 GlobalTaskList globalTaskList;
 
+void addTaskToProject(unsigned long id, char *description, unsigned long duration, GlobalTaskList dependeciesPointer)
+{
+	Task newTask;
+	incrementnumberOfDependents(dependeciesPointer.head);
+	newTask = createTask(id, description, duration, dependeciesPointer.head);
+	globalTaskList = TLinsert(globalTaskList.head, globalTaskList.tail, newTask);
+	HTinsert(newTask);
+	globalTaskList.criticalPathValidation = 0;
+}
+
 /*
  * Function:  add 
  * --------------------
@@ -18,9 +28,7 @@ void add()
 {
 	char *end, *s, description[MAX_DESCRIPTION_SIZE], ids[DEPENDECIES_SIZE];
 	struct taskListPointers dependeciesPointer;
-	Task newTask;
 	unsigned long numberInputs = 0, id, duration, longFromCommand, canInsert = 1;
-
 	dependeciesPointer.head = NULL, dependeciesPointer.tail = NULL;
 
 	numberInputs = scanf("%lu \"%[^\"]\" %lu", &id, description, &duration);
@@ -54,10 +62,7 @@ void add()
 			}
 			if (canInsert)
 			{
-				newTask = createTask(id, description, duration, dependeciesPointer.head);
-				globalTaskList = TLinsert(globalTaskList.head, globalTaskList.tail, newTask);
-				HTinsert(newTask);
-				globalTaskList.criticalPathValidation = 0;
+				addTaskToProject(id, description, duration, dependeciesPointer);
 			}
 		}
 	}
@@ -141,12 +146,7 @@ void removeTaskFromProject()
 	if (scanf("%lu", &id) != 1 || id == 0)
 		printf("illegal arguments\n");
 	else
-	{
-		/*TLprintId(globalTaskList.head);
-	printf("delete %lu -----\n", id);*/
 		globalTaskList = deleteTask(globalTaskList, id, CHECK_DEPENDECIES);
-		/*HTdelete(id);*/
-	}
 }
 
 /*
@@ -179,7 +179,6 @@ void readCommands()
 	char command[COMMAND_MAX_SIZE];
 	while (scanf("%9s", command) == 1 && strcmp(command, "exit"))
 	{
-		/*printf("-%s\n", command);*/
 		if (!strcmp(command, "add"))
 			add();
 		else if (!strcmp(command, "duration"))
