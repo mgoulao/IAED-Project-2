@@ -29,9 +29,7 @@ void add()
 	else
 	{
 		if (HTsearch(id) != NULL)
-		{
 			printf("%s\n", "id already exists");
-		}
 		else
 		{
 			if (strcmp(ids, "\n") != 0)
@@ -42,17 +40,14 @@ void add()
 
 					if (HTsearch(longFromCommand) == NULL)
 					{
-						/*printf("%lu\n", id);*/
 						printf("no such task\n");
 						canInsert = 0;
 						TLdelete(dependeciesPointer.head);
 						break;
 					}
 					else
-					{
 						dependeciesPointer = TLinsert(dependeciesPointer.head, dependeciesPointer.tail,
 													  HTsearch(longFromCommand)->task);
-					}
 				}
 			}
 			if (canInsert)
@@ -70,18 +65,12 @@ void listTasksByDuration()
 {
 	unsigned long duration = 0;
 	if (getchar() != '\n')
-	{
 		scanf("%lu", &duration);
-	}
 
 	if (duration)
-	{
 		TLprint(globalTaskList.head, 'd', duration, globalTaskList.criticalPathValidation);
-	}
 	else
-	{
 		TLprint(globalTaskList.head, 'a', 0, globalTaskList.criticalPathValidation);
-	}
 }
 
 void printDependentTasks()
@@ -90,15 +79,13 @@ void printDependentTasks()
 	TaskList p, dependentTasksHead = NULL;
 
 	if (scanf("%lu", &id) != 1 || id == 0)
-	{
+
 		printf("illegal arguments\n");
-	}
+
 	else
 	{
 		if (TLisEmpty(HTsearch(id)))
-		{
 			printf("no such task\n");
-		}
 		else
 		{
 			dependentTasksHead = getDependentTasks(globalTaskList.head, id);
@@ -107,15 +94,12 @@ void printDependentTasks()
 			if (TLlength(dependentTasksHead))
 			{
 				for (p = dependentTasksHead; p; p = p->next)
-				{
 					printf(" %lu", p->task->id);
-				}
+
 				printf("\n");
 			}
 			else
-			{
 				printf(" no dependencies\n");
-			}
 		}
 	}
 }
@@ -124,9 +108,7 @@ void removeTaskFromProject()
 {
 	unsigned long id;
 	if (scanf("%lu", &id) != 1 || id == 0)
-	{
 		printf("illegal arguments\n");
-	}
 	else
 	{
 		/*TLprintId(globalTaskList.head);
@@ -152,30 +134,20 @@ void readCommands()
 	{
 		/*printf("-%s\n", command);*/
 		if (!strcmp(command, "add"))
-		{
 			add();
-		}
 		else if (!strcmp(command, "duration"))
-		{
 			listTasksByDuration();
-		}
 		else if (!strcmp(command, "depend"))
-		{
 			printDependentTasks();
-		}
 		else if (!strcmp(command, "remove"))
-		{
 			removeTaskFromProject();
-		}
 		else if (!strcmp(command, "path"))
 		{
 			globalTaskList.criticalPathValidation = 1;
 			listTasksFromCriticalPath();
 		}
 		else
-		{
 			printf("illegal arguments\n");
-		}
 	}
 }
 
@@ -185,9 +157,12 @@ int main()
 	globalTaskList.head = NULL;
 	globalTaskList.tail = NULL;
 	globalTaskList.criticalPathValidation = 0;
+
 	HTinit(m);
+
 	readCommands(globalTaskList.head, globalTaskList.tail);
 	/*TLprint(globalTaskList.head);
 	HTshow();*/
+
 	return 0;
 }

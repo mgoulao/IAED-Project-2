@@ -87,12 +87,3 @@ void HTdelete(unsigned long id)
 		}
 	}
 }
-
-void HTshow()
-{
-	int i;
-	for (i = 0; i < M; i++)
-	{
-		TLprintId(hashTableTaskLists[i].head);
-	}
-}

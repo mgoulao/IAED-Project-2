@@ -43,7 +43,8 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id);
 TaskList TLsearch(TaskList head, unsigned long id);
 int TLisEmpty(TaskList head);
 int TLlength(TaskList head);
-void ResetTasksTime(TaskList head);
+void ResetTasksLateStart(TaskList head);
+unsigned long TLcalculateDuration(TaskList node);
 int TLcalculateTasksTimes(TaskList head);
 void TLcalculateLateStart(TaskList node, unsigned long duration);
 

@@ -124,7 +124,7 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 					}
 					previous->next = current->next;
 				}
-				/*ResetTasksTime(globalTaskList.head);*/
+				/*ResetTasksLateStart(globalTaskList.head);*/
 				globalTaskList.criticalPathValidation = 0;
 				free(current->task);
 				free(current);
@@ -232,7 +232,14 @@ TaskList TLsearch(TaskList head, unsigned long id)
 	return current;
 }
 
-void ResetTasksTime(TaskList head)
+/*
+ * Function:  ResetTasksLateStart 
+ * --------------------
+ * Sets Late Start to BIG_TASK_TIME to all Tasks of the TaskList
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
+void ResetTasksLateStart(TaskList head)
 {
 	TaskList p;
 
@@ -243,7 +250,14 @@ void ResetTasksTime(TaskList head)
 	}
 }
 
-unsigned long TLcalculateCriticalPath(TaskList node)
+/*
+ * Function:  TLcalculateDuration 
+ * --------------------
+ * Calculates Path duration and the earlyStart of the Task inside the node
+ * 
+ * node: Pointer for the node with the Task
+ */
+unsigned long TLcalculateDuration(TaskList node)
 {
 	unsigned long biggerTime = 0, currentTime = 0;
 	TaskList p;
@@ -258,7 +272,7 @@ unsigned long TLcalculateCriticalPath(TaskList node)
 	}
 	for (p = node->task->ids; p; p = p->next)
 	{
-		currentTime = TLcalculateCriticalPath(p);
+		currentTime = TLcalculateDuration(p);
 		if (biggerTime < currentTime)
 		{
 			biggerTime = currentTime;
@@ -269,6 +283,14 @@ unsigned long TLcalculateCriticalPath(TaskList node)
 	return biggerTime + node->task->duration;
 }
 
+/*
+ * Function:  TLcalculateLateStart 
+ * --------------------
+ * Calculates the lateStart of the Task inside the node
+ * 
+ * node: Pointer for the node with the Task
+ * duration: lateStart of the successor or the Path duration
+ */
 void TLcalculateLateStart(TaskList node, unsigned long duration)
 {
 	TaskList p;
@@ -276,20 +298,7 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
 	{
 		node->task->lateStart = duration - node->task->duration;
 	}
-	/*if (node->task->lateStart == BIG_TASK_TIME)
-	{
-		node->task->lateStart = duration - node->task->duration;
-		printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);
-
-
-		for (p = node->task->ids; p; p = p->next)
-			TLcalculateLateStart(p, duration - node->task->duration);
-	}
-	else if (node->task->lateStart > duration - node->task->duration)
-	{
-		node->task->lateStart = duration - node->task->duration;
-	}*/
-	if (duration - node->task->duration <= node->task->lateStart)
+	else if (duration - node->task->duration <= node->task->lateStart)
 	{
 		node->task->lateStart = duration - node->task->duration;
 		/*printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);*/
@@ -299,6 +308,14 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
 	}
 }
 
+/*
+ * Function:  TLcalculateTasksTimes 
+ * --------------------
+ * Calculates lateStart and earlyStart for all Tasks
+ * and returns the Path duration
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
 int TLcalculateTasksTimes(TaskList head)
 {
 	unsigned long duration = 0, currentTime;
@@ -309,11 +326,11 @@ int TLcalculateTasksTimes(TaskList head)
 		if (!taskHasDependents(head, p->task))
 		{
 			/*printf("--- end --- id-- %lu \n", p->task->id);*/
-			currentTime = TLcalculateCriticalPath(p);
+			currentTime = TLcalculateDuration(p);
 			if (currentTime > duration)
 			{
 				duration = currentTime;
-				ResetTasksTime(head);
+				ResetTasksLateStart(head);
 			}
 		}
 	}
@@ -322,9 +339,7 @@ int TLcalculateTasksTimes(TaskList head)
 	for (p = head; p; p = p->next)
 	{
 		if (!taskHasDependents(head, p->task))
-		{
 			TLcalculateLateStart(p, duration);
-		}
 	}
 
 	return duration;
