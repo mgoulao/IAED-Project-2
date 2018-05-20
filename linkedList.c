@@ -124,7 +124,7 @@ GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
 					}
 					previous->next = current->next;
 				}
-				ResetTasksTime(globalTaskList.head);
+				/*ResetTasksTime(globalTaskList.head);*/
 				globalTaskList.criticalPathValidation = 0;
 				free(current->task);
 				free(current);
@@ -238,7 +238,7 @@ void ResetTasksTime(TaskList head)
 
 	for (p = head; p; p = p->next)
 	{
-		p->task->earlyStart = BIG_TASK_TIME;
+		/*p->task->earlyStart = BIG_TASK_TIME;*/
 		p->task->lateStart = BIG_TASK_TIME;
 	}
 }
@@ -272,11 +272,11 @@ unsigned long TLcalculateCriticalPath(TaskList node)
 void TLcalculateLateStart(TaskList node, unsigned long duration)
 {
 	TaskList p;
-	if (TLisEmpty(node->task->ids))
+	if (TLisEmpty(node->task->ids) && duration - node->task->duration <= node->task->lateStart)
 	{
 		node->task->lateStart = duration - node->task->duration;
 	}
-	if (node->task->lateStart == BIG_TASK_TIME)
+	/*if (node->task->lateStart == BIG_TASK_TIME)
 	{
 		node->task->lateStart = duration - node->task->duration;
 		printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);
@@ -288,6 +288,14 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
 	else if (node->task->lateStart > duration - node->task->duration)
 	{
 		node->task->lateStart = duration - node->task->duration;
+	}*/
+	if (duration - node->task->duration <= node->task->lateStart)
+	{
+		node->task->lateStart = duration - node->task->duration;
+		/*printf("--- id -- %lu -- early -- %lu -- late .. %lu \n", node->task->id, node->task->earlyStart, node->task->lateStart);*/
+
+		for (p = node->task->ids; p; p = p->next)
+			TLcalculateLateStart(p, duration - node->task->duration);
 	}
 }
 
@@ -300,12 +308,17 @@ int TLcalculateTasksTimes(TaskList head)
 	{
 		if (!taskHasDependents(head, p->task))
 		{
+			/*printf("--- end --- id-- %lu \n", p->task->id);*/
 			currentTime = TLcalculateCriticalPath(p);
 			if (currentTime > duration)
+			{
 				duration = currentTime;
+				ResetTasksTime(head);
+			}
 		}
 	}
 
+	/*Calculate Late Start*/
 	for (p = head; p; p = p->next)
 	{
 		if (!taskHasDependents(head, p->task))

@@ -1,6 +1,9 @@
 #ifndef _LIST_
 #define _LIST_
 #define BIG_TASK_TIME 10000000
+#define MAX_DESCRIPTION_SIZE 8000
+#define DEPENDECIES_SIZE 80000
+#define COMMAND_MAX_SIZE 9
 
 typedef struct task *Task;
 typedef struct node *TaskList;
@@ -8,7 +11,7 @@ typedef struct node *TaskList;
 struct task
 {
 	unsigned long id, duration, earlyStart, lateStart;
-	char description[8000];
+	char *description;
 	TaskList ids;
 };
 

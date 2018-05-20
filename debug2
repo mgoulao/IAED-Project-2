@@ -1,0 +1,16 @@
+add 1 "ad" 1
+add 2 "ad" 2
+add 3 "ad" 3 1
+add 4 "ad" 4 1 2
+add 5 "ad" 5 3 4
+add 7 "ad" 7 4
+add 6 "ad" 6 4 7
+duration
+path
+duration
+add 9 "ad" 9 3
+add 10 "ad" 10 9 5
+duration
+path
+duration
+exit

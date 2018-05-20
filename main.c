@@ -4,10 +4,6 @@
 #include "linkedList.h"
 #include "hashTable.h"
 
-#define MAX_DESCRIPTION_SIZE 8010
-#define DEPENDECIES_SIZE 80000
-#define COMMAND_MAX_SIZE 9
-
 GlobalTaskList globalTaskList;
 
 /*

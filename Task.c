@@ -7,6 +7,7 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
 {
 	Task task = (Task)malloc(sizeof(struct task));
 	task->id = id;
+	task->description = (char*) malloc((strlen(description) + 1) * sizeof(char));
 	strcpy(task->description, description);
 	task->duration = duration;
 	task->ids = idsHead;
@@ -54,16 +55,18 @@ int taskHasDependencies(Task task)
 
 int taskHasDependents(TaskList head, Task task)
 {
-	TaskList dependentsHead = NULL;
+	TaskList p, dependeciePointer = NULL;
 
-	dependentsHead = getDependentTasks(head, task->id);
-
-	if (dependentsHead == NULL)
+	for (p = head; p; p = p->next)
 	{
-		return 0;
+		dependeciePointer = TLsearch(p->task->ids, task->id);
+		if (dependeciePointer)
+		{
+			return 1;
+		}
 	}
 
-	return 1;
+	return 0;
 }
 
 TaskList getDependentTasks(TaskList head, unsigned long id)
