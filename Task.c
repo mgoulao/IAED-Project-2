@@ -24,6 +24,7 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
 	task->ids = idsHead;
 	task->earlyStart = BIG_TASK_TIME;
 	task->lateStart = BIG_TASK_TIME;
+	task->numberOfDependents = 0;
 	return task;
 }
 
@@ -37,7 +38,7 @@ Task createTask(unsigned long id, char *description, unsigned long duration, Tas
  */
 GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int checkDependecies)
 {
-	TaskList current, previous;
+	TaskList p, current, previous;
 	int exist = 0;
 
 	for (current = globalTaskList.head, previous = NULL; current; previous = current,
@@ -47,20 +48,23 @@ GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int c
 		if (current->task->id == id)
 		{
 			exist = 1;
-
 			if (checkDependecies && taskHasDependents(globalTaskList.head, current->task))
 			{
 				printf("%s\n", "task with dependencies");
 			}
 			else
 			{
+				for (p = current->task->ids; p; p = p->next)
+				{
+					p->task->numberOfDependents--;
+				}
+
 				if (previous == NULL)
 				{
 					globalTaskList.head = current->next;
 				}
 				else
 				{
-
 					if (current->next == NULL)
 					{
 						globalTaskList.tail = previous;
@@ -68,7 +72,6 @@ GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int c
 					}
 					previous->next = current->next;
 				}
-				/*ResetTasksLateStart(globalTaskList.head);*/
 				globalTaskList.criticalPathValidation = 0;
 				HTdeleteTask(id);
 				TLdelete(current->task->ids);
@@ -133,6 +136,15 @@ void listTask(Task task, int criticalPathValidation)
 	TLprintId(task->ids);
 }
 
+void incrementnumberOfDependents(TaskList head)
+{
+	TaskList p;
+	for (p = head; p; p = p->next)
+	{
+		p->task->numberOfDependents++;
+	}
+}
+
 /*
  * Function:  taskHasDependencies 
  * --------------------
@@ -159,16 +171,7 @@ int taskHasDependencies(Task task)
  */
 int taskHasDependents(TaskList head, Task task)
 {
-	TaskList p, dependeciePointer = NULL;
-
-	for (p = head; p; p = p->next)
-	{
-		dependeciePointer = TLsearch(p->task->ids, task->id);
-		if (dependeciePointer)
-			return 1;
-	}
-
-	return 0;
+	return task->numberOfDependents;
 }
 
 /*
