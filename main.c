@@ -6,6 +6,13 @@
 
 GlobalTaskList globalTaskList;
 
+
+/*
+ * Function:  addTaskToProject 
+ * --------------------
+ * Adds a Task to a global TaskList and the HashTable
+ * 
+ */
 void addTaskToProject(unsigned long id, char *description, unsigned long duration, GlobalTaskList dependeciesPointer)
 {
 	Task newTask;
@@ -19,7 +26,8 @@ void addTaskToProject(unsigned long id, char *description, unsigned long duratio
 /*
  * Function:  add 
  * --------------------
- * Adds a Task to a global TaskList and a HashTable
+ * Receives, parses the command and add
+ * the Task to a global TaskList and a HashTable
  * 
  * command: add id descrição duração ids
  * 
