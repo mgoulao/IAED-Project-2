@@ -15,6 +15,8 @@ TaskList HTsearch(unsigned long int id);
 
 void HTinsert(Task task);
 
-void HTdelete(unsigned long id);
+void HTdelete();
+
+void HTdeleteTask(unsigned long id);
 
 #endif

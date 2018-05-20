@@ -100,6 +100,8 @@ void printDependentTasks()
 			}
 			else
 				printf(" no dependencies\n");
+
+			TLdelete(dependentTasksHead);
 		}
 	}
 }
@@ -113,7 +115,7 @@ void removeTaskFromProject()
 	{
 		/*TLprintId(globalTaskList.head);
 	printf("delete %lu -----\n", id);*/
-		globalTaskList = TLTaskdelete(globalTaskList, id);
+		globalTaskList = deleteTask(globalTaskList, id, CHECK_DEPENDECIES);
 		/*HTdelete(id);*/
 	}
 }
@@ -162,6 +164,8 @@ int main()
 
 	readCommands(globalTaskList.head, globalTaskList.tail);
 
+	TLdeleteAllTasks(globalTaskList);
+	HTdelete();
 
 	return 0;
 }

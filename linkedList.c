@@ -62,7 +62,7 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 {
 	GlobalTaskList listPointers;
 	TaskList link = (TaskList)malloc(sizeof(struct node));
-
+	printf("malloc node\n");
 	if (!head)
 	{
 		head = link;
@@ -84,62 +84,6 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 }
 
 /*
- * Function:  TLTaskdelete 
- * --------------------
- * Deletes a given Task from the TaskList 
- * 
- * globalTaskList: struct with Pointers to the beginning and end of the TaskList
- * id: ID of the Task to delete
- */
-GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id)
-{
-	TaskList current, previous;
-	int exist = 0;
-
-	for (current = globalTaskList.head, previous = NULL; current; previous = current,
-		current = current->next)
-	{
-
-		if (current->task->id == id)
-		{
-			exist = 1;
-
-			if (taskHasDependents(globalTaskList.head, current->task))
-			{
-				printf("%s\n", "task with dependencies");
-			}
-			else
-			{
-				if (previous == NULL)
-				{
-					globalTaskList.head = current->next;
-				}
-				else
-				{
-
-					if (current->next == NULL)
-					{
-						globalTaskList.tail = previous;
-						globalTaskList.tail->next = NULL;
-					}
-					previous->next = current->next;
-				}
-				/*ResetTasksLateStart(globalTaskList.head);*/
-				globalTaskList.criticalPathValidation = 0;
-				free(current->task);
-				free(current);
-				HTdelete(id);
-			}
-			break;
-		}
-	}
-
-	if (!exist)
-		printf("%s\n", "no such task");
-	return globalTaskList;
-}
-
-/*
  * Function:  TLdelete 
  * --------------------
  * Deletes a given TaskList, but not the Tasks
@@ -150,7 +94,7 @@ void TLdelete(TaskList head)
 {
 	TaskList current;
 
-	if (TLlength(head) > 0)
+	if (!TLisEmpty(head))
 	{
 		while (head)
 		{
@@ -158,6 +102,25 @@ void TLdelete(TaskList head)
 			head = current->next;
 
 			free(current);
+			printf("free node\n");
+		}
+	}
+}
+
+/*
+ * Function:  TLdelete 
+ * --------------------
+ * Deletes a given TaskList, but not the Tasks
+ * 
+ * head: Pointer for the first element of the TaskList
+ */
+void TLdeleteAllTasks(GlobalTaskList globalTaskList)
+{
+	if (!TLisEmpty(globalTaskList.head))
+	{
+		while (globalTaskList.head)
+		{
+			globalTaskList = deleteTask(globalTaskList, globalTaskList.head->task->id, NOT_CHECK_DEPENDECIES);
 		}
 	}
 }

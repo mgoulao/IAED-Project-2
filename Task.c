@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "linkedList.h"
+#include "hashTable.h"
 
 /*
  * Function:  createTask 
@@ -16,14 +17,78 @@
 Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead)
 {
 	Task task = (Task)malloc(sizeof(struct task));
+	printf("malloc task\n");
 	task->id = id;
-	task->description = (char*) malloc((strlen(description) + 1) * sizeof(char));
+	task->description = (char *)malloc((strlen(description) + 1) * sizeof(char));
+	printf("malloc desc\n");
 	strcpy(task->description, description);
 	task->duration = duration;
 	task->ids = idsHead;
 	task->earlyStart = BIG_TASK_TIME;
 	task->lateStart = BIG_TASK_TIME;
 	return task;
+}
+
+/*
+ * Function:  deleteTask 
+ * --------------------
+ * Deletes a given Task from the TaskList 
+ * 
+ * globalTaskList: struct with Pointers to the beginning and end of the TaskList
+ * id: ID of the Task to delete
+ */
+GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int checkDependecies)
+{
+	TaskList current, previous;
+	int exist = 0;
+
+	for (current = globalTaskList.head, previous = NULL; current; previous = current,
+		current = current->next)
+	{
+
+		if (current->task->id == id)
+		{
+			exist = 1;
+
+			if (checkDependecies && taskHasDependents(globalTaskList.head, current->task))
+			{
+				printf("%s\n", "task with dependencies");
+			}
+			else
+			{
+				if (previous == NULL)
+				{
+					globalTaskList.head = current->next;
+				}
+				else
+				{
+
+					if (current->next == NULL)
+					{
+						globalTaskList.tail = previous;
+						globalTaskList.tail->next = NULL;
+					}
+					previous->next = current->next;
+				}
+				/*ResetTasksLateStart(globalTaskList.head);*/
+				globalTaskList.criticalPathValidation = 0;
+				printf("deleteTask\n");
+				HTdeleteTask(id);
+				TLdelete(current->task->ids);
+				free(current->task->description);
+				printf("free desc\n");
+				free(current->task);
+				printf("free task\n");
+				free(current);
+				printf("free node\n");
+			}
+			break;
+		}
+	}
+
+	if (!exist)
+		printf("%s\n", "no such task");
+	return globalTaskList;
 }
 
 /*

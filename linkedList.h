@@ -4,6 +4,8 @@
 #define MAX_DESCRIPTION_SIZE 8000
 #define DEPENDECIES_SIZE 80000
 #define COMMAND_MAX_SIZE 9
+#define CHECK_DEPENDECIES 1
+#define NOT_CHECK_DEPENDECIES 0
 
 typedef struct task *Task;
 typedef struct node *TaskList;
@@ -28,6 +30,7 @@ typedef struct taskListPointers
 } GlobalTaskList;
 
 Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead);
+GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int checkDependecies);
 int taskHasDependencies(Task task);
 int taskHasDependents(TaskList head, Task task);
 int taskHasBiggerDuration(Task task, unsigned long duration);
@@ -39,7 +42,7 @@ void TLprintId(TaskList head);
 void TLprint(TaskList head, char condition, unsigned long duration, int criticalPathValidation);
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task);
 void TLdelete(TaskList head);
-GlobalTaskList TLTaskdelete(GlobalTaskList globalTaskList, unsigned long id);
+void TLdeleteAllTasks(GlobalTaskList globalTaskList);
 TaskList TLsearch(TaskList head, unsigned long id);
 int TLisEmpty(TaskList head);
 int TLlength(TaskList head);

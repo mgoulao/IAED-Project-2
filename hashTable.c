@@ -19,6 +19,7 @@ void HTinit(int m)
 	int i;
 	M = m;
 	hashTableTaskLists = (GlobalTaskList *)malloc(M * sizeof(GlobalTaskList));
+	printf("malloc hash\n");
 	for (i = 0; i < M; i++)
 	{
 		hashTableTaskLists[i].head = NULL;
@@ -49,6 +50,7 @@ TaskList HTsearch(unsigned long int id)
 void HTinsert(Task task)
 {
 	int i = hash(key(task), M);
+	printf("insert hash");
 	hashTableTaskLists[i] = TLinsert(hashTableTaskLists[i].head, hashTableTaskLists[i].tail, task);
 }
 
@@ -59,7 +61,20 @@ void HTinsert(Task task)
  * 
  * id: Id of the Task to delete
  */
-void HTdelete(unsigned long id)
+void HTdelete()
+{
+	free(hashTableTaskLists);
+	printf("free hash\n");
+}
+
+/*
+ * Function:  HTdeleteTask 
+ * --------------------
+ * Deletes the Task from  HashTable
+ * 
+ * id: Id of the Task to delete
+ */
+void HTdeleteTask(unsigned long id)
 {
 	int i = hash(id, M);
 	TaskList current, previous;
@@ -83,6 +98,8 @@ void HTdelete(unsigned long id)
 				previous->next = current->next;
 			}
 			free(current);
+			printf("free node hash\n");
+
 			break;
 		}
 	}
