@@ -10,7 +10,9 @@ GlobalTaskList globalTaskList;
  * Function:  add 
  * --------------------
  * Adds a Task to a global TaskList and a HashTable
- *
+ * 
+ * command: add id descrição duração ids
+ * 
  */
 void add()
 {
@@ -61,6 +63,16 @@ void add()
 	}
 }
 
+/*
+ * Function:  listTasksByDuration 
+ * --------------------
+ * List all Tasks with duration bigger or equal
+ * to the value given or list all Tasks if 
+ * the value is omitted list all Tasks
+ * 
+ * command: duration || duration value
+ * 
+ */
 void listTasksByDuration()
 {
 	unsigned long duration = 0;
@@ -73,6 +85,15 @@ void listTasksByDuration()
 		TLprint(globalTaskList.head, 'a', 0, globalTaskList.criticalPathValidation);
 }
 
+/*
+ * Function:  printDependentTasks 
+ * --------------------
+ * Prints the dependent Tasks id's of
+ * the Task indicated in the command
+ * 
+ * command: depend id
+ * 
+ */
 void printDependentTasks()
 {
 	unsigned long id;
@@ -106,6 +127,14 @@ void printDependentTasks()
 	}
 }
 
+/*
+ * Function:  removeTaskFromProject 
+ * --------------------
+ * Removes a given task from the Project
+ * 
+ * command: remove id
+ * 
+ */
 void removeTaskFromProject()
 {
 	unsigned long id;
@@ -120,6 +149,15 @@ void removeTaskFromProject()
 	}
 }
 
+/*
+ * Function:  removeTaskFromProject 
+ * --------------------
+ * Lists all the Tasks in the Critical Path
+ * by the order of insertion
+ * 
+ * command: path
+ * 
+ */
 void listTasksFromCriticalPath()
 {
 	unsigned long duration;
@@ -129,6 +167,13 @@ void listTasksFromCriticalPath()
 	printf("project duration = %lu\n", duration);
 }
 
+/*
+ * Function:  readCommands 
+ * --------------------
+ * Reads the program commands from the 
+ * stdin
+ * 
+ */
 void readCommands()
 {
 	char command[COMMAND_MAX_SIZE];

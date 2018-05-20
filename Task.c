@@ -17,10 +17,8 @@
 Task createTask(unsigned long id, char *description, unsigned long duration, TaskList idsHead)
 {
 	Task task = (Task)malloc(sizeof(struct task));
-	printf("malloc task\n");
 	task->id = id;
 	task->description = (char *)malloc((strlen(description) + 1) * sizeof(char));
-	printf("malloc desc\n");
 	strcpy(task->description, description);
 	task->duration = duration;
 	task->ids = idsHead;
@@ -72,15 +70,11 @@ GlobalTaskList deleteTask(GlobalTaskList globalTaskList, unsigned long id, int c
 				}
 				/*ResetTasksLateStart(globalTaskList.head);*/
 				globalTaskList.criticalPathValidation = 0;
-				printf("deleteTask\n");
 				HTdeleteTask(id);
 				TLdelete(current->task->ids);
 				free(current->task->description);
-				printf("free desc\n");
 				free(current->task);
-				printf("free task\n");
 				free(current);
-				printf("free node\n");
 			}
 			break;
 		}
@@ -156,11 +150,11 @@ int taskHasDependencies(Task task)
 }
 
 /*
- * Function:  taskHasDependencies 
+ * Function:  taskHasDependents 
  * --------------------
  * Returns 1 if the task as dependents (successors)
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  * task: Pointer to the task
  */
 int taskHasDependents(TaskList head, Task task)
@@ -178,11 +172,11 @@ int taskHasDependents(TaskList head, Task task)
 }
 
 /*
- * Function:  taskHasDependencies 
+ * Function:  getDependentTasks 
  * --------------------
  * Returns a TaskList with dependent task
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  * id: id of the task 
  */
 TaskList getDependentTasks(TaskList head, unsigned long id)

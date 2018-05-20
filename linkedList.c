@@ -52,17 +52,18 @@ void TLprint(TaskList head, char condition, unsigned long duration, int critical
 }
 
 /*
- * Function:  TLprintId 
+ * Function:  TLinsert 
  * --------------------
- * Prints all task Id from TaskList by insertion order 
+ * Inserts a Task in a TaskList
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
+ * tail: Pointer to the last element of the TaskList
+ * task: Pointer to the task 
  */
 GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
 {
 	GlobalTaskList listPointers;
 	TaskList link = (TaskList)malloc(sizeof(struct node));
-	printf("malloc node\n");
 	if (!head)
 	{
 		head = link;
@@ -88,7 +89,7 @@ GlobalTaskList TLinsert(TaskList head, TaskList tail, Task task)
  * --------------------
  * Deletes a given TaskList, but not the Tasks
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 void TLdelete(TaskList head)
 {
@@ -102,7 +103,6 @@ void TLdelete(TaskList head)
 			head = current->next;
 
 			free(current);
-			printf("free node\n");
 		}
 	}
 }
@@ -112,7 +112,7 @@ void TLdelete(TaskList head)
  * --------------------
  * Deletes a given TaskList, but not the Tasks
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 void TLdeleteAllTasks(GlobalTaskList globalTaskList)
 {
@@ -130,7 +130,7 @@ void TLdeleteAllTasks(GlobalTaskList globalTaskList)
  * --------------------
  * Checks if the TaskList is empty
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 int TLisEmpty(TaskList head)
 {
@@ -142,7 +142,7 @@ int TLisEmpty(TaskList head)
  * --------------------
  * Returns the TaskList length
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 int TLlength(TaskList head)
 {
@@ -166,7 +166,7 @@ int TLlength(TaskList head)
  * --------------------
  * Returns a Pointer to the position of the node with the requested Task
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  * id: Id of the requested Task
  */
 TaskList TLsearch(TaskList head, unsigned long id)
@@ -200,7 +200,7 @@ TaskList TLsearch(TaskList head, unsigned long id)
  * --------------------
  * Sets Late Start to BIG_TASK_TIME to all Tasks of the TaskList
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 void ResetTasksLateStart(TaskList head)
 {
@@ -218,7 +218,7 @@ void ResetTasksLateStart(TaskList head)
  * --------------------
  * Calculates Path duration and the earlyStart of the Task inside the node
  * 
- * node: Pointer for the node with the Task
+ * node: Pointer to the node with the Task
  */
 unsigned long TLcalculateDuration(TaskList node)
 {
@@ -251,7 +251,7 @@ unsigned long TLcalculateDuration(TaskList node)
  * --------------------
  * Calculates the lateStart of the Task inside the node
  * 
- * node: Pointer for the node with the Task
+ * node: Pointer to the node with the Task
  * duration: lateStart of the successor or the Path duration
  */
 void TLcalculateLateStart(TaskList node, unsigned long duration)
@@ -277,7 +277,7 @@ void TLcalculateLateStart(TaskList node, unsigned long duration)
  * Calculates lateStart and earlyStart for all Tasks
  * and returns the Path duration
  * 
- * head: Pointer for the first element of the TaskList
+ * head: Pointer to the first element of the TaskList
  */
 int TLcalculateTasksTimes(TaskList head)
 {
