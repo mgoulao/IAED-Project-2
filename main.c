@@ -6,7 +6,6 @@
 
 GlobalTaskList globalTaskList;
 
-
 /*
  * Function:  addTaskToProject 
  * --------------------
