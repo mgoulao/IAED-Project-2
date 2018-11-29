@@ -7,7 +7,7 @@ for arg in "$@"
 do
 	echo ""
   	echo "Running $arg"
-  	time ./bla < "${arg%.*}".in > "${arg%.*}".mine.out
+  	valgrind ./bla < "${arg%.*}".in > "${arg%.*}".mine.out
   	diff -q "${arg%.*}".out "${arg%.*}".mine.out
 done
 

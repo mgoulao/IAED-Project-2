@@ -1,4 +1,4 @@
 #!/bin/bash  
 ### use: ./run_all.sh <program.c>
 
-./run.sh $1 *.in
+./run.sh $1 tests/*.in

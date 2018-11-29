@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "linkedList.h"
 #include "hashTable.h"
+#include "task.h"
 
 /*
  * Function:  TLprintId 

@@ -3,6 +3,7 @@
 #include <string.h>
 #include "linkedList.h"
 #include "hashTable.h"
+#include "task.h"
 
 GlobalTaskList globalTaskList;
 
